@@ -1,0 +1,25 @@
+.Controls {
+  display: flex;
+  flex-direction: column;
+}
+
+.Controls__button {
+  width: 100%;
+  padding: 20px;
+  border: 0;
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.Controls__button:hover {
+  opacity: 0.85;
+}
+
+.Controls__button--approve {
+  background: #2ecc71;
+}
+
+.Controls__button--reject {
+  background: #c0392b;
+}

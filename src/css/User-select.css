@@ -1,0 +1,21 @@
+.User-select {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+}
+
+.User-select__label {
+  flex-grow: 0;
+  white-space: nowrap;
+  margin-right: 10px;
+}
+
+.User-select__list {
+  width: 100%;
+  background: #fff;
+  border: 0;
+  padding: 20px;
+  height: 40px;
+  outline: none;
+  font-size: 15px;
+}
