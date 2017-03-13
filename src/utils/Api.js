@@ -5,7 +5,7 @@ const fetchUsers = () => (
 )
 
 const getDataForMonth = ({ month, year, userId }) => (
-  fetch(`${API_URL}/training/weeks/${month}/${year}/${userId}`)
+  fetch(`${API_URL}/training/weeks/${month + 1}/${year}/${userId}`)
 )
 
 const Api = {

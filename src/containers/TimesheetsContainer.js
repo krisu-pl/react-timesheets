@@ -12,6 +12,7 @@ import UserSelect from '../components/UserSelect'
 import Controls from '../components/Controls'
 
 import { getMonthName } from '../utils/datetime'
+import { sortWeeks, sortWeekDays } from '../utils/calendar'
 
 class TimesheetsContainer extends Component {
   constructor() {
@@ -20,6 +21,8 @@ class TimesheetsContainer extends Component {
     this.handleApprove = this.handleApprove.bind(this)
     this.handleReject = this.handleReject.bind(this)
     this.handleUserSelection = this.handleUserSelection.bind(this)
+    this.goToPreviousMonth = this.goToPreviousMonth.bind(this)
+    this.goToNextMonth = this.goToNextMonth.bind(this)
   }
 
   componentDidMount() {
@@ -38,6 +41,26 @@ class TimesheetsContainer extends Component {
     return true
   }
 
+  goToPreviousMonth() {
+    const oldMonth = this.props.selectedMonth
+    const year = this.props.selectedYear
+    const userId = this.props.selectedUser
+
+    const month = (oldMonth - 1 < 0) ? 11 : oldMonth - 1
+    this.props.selectMonth({ month, year })
+    this.props.getDataForMonth({ month, year, userId })
+  }
+
+  goToNextMonth() {
+    const oldMonth = this.props.selectedMonth
+    const year = this.props.selectedYear
+    const userId = this.props.selectedUser
+
+    const month = (oldMonth + 1 > 11) ? 0 : oldMonth + 1
+    this.props.selectMonth({ month, year })
+    this.props.getDataForMonth({ month, year, userId })
+  }
+
   handleUserSelection(event) {
     const userId = event.target.value
     const month = new Date().getMonth()
@@ -47,6 +70,20 @@ class TimesheetsContainer extends Component {
     this.props.getDataForMonth({ month, year, userId })
 
     return true
+  }
+
+  getWeekClass(status) {
+    const baseClass = 'Calendar-week'
+    switch (status) {
+      case 'approved':
+        return `${baseClass} Calendar-week--green`
+      case 'rejected':
+        return `${baseClass} Calendar-week--red`
+      case 'waiting':
+        return `${baseClass} Calendar-week--yellow`
+      default:
+        return `${baseClass}`
+    }
   }
 
   render() {
@@ -63,25 +100,47 @@ class TimesheetsContainer extends Component {
 
         <div className="Calendar">
           <div className="Calendar-header">
-            <div className="Calendar-header__arrow Calendar-header__arrow--left">
+            <div
+              className="Calendar-header__arrow Calendar-header__arrow--left"
+              onClick={this.goToPreviousMonth}
+            >
               &laquo;
             </div>
             <div className="Calendar-header__month">
               { getMonthName(this.props.selectedMonth) }
             </div>
-            <div className="Calendar-header__arrow Calendar-header__arrow--left">
+            <div
+              className="Calendar-header__arrow Calendar-header__arrow--left"
+              onClick={this.goToNextMonth}
+            >
               &raquo;
             </div>
           </div>
 
-          {this.props.weeks.map(week => (
-            <div key={week.week_id} className="Calendar-week">
-              { week.days_in_week.map(day => (
+          <div className="Calendar-week Calendar-week--day-names">
+            <div className="Calendar-week__day">Mon</div>
+            <div className="Calendar-week__day">Tue</div>
+            <div className="Calendar-week__day">Wed</div>
+            <div className="Calendar-week__day">Thu</div>
+            <div className="Calendar-week__day">Fri</div>
+            <div className="Calendar-week__day">Sat</div>
+            <div className="Calendar-week__day">Sun</div>
+          </div>
+
+          {this.props.weeks.sort(sortWeeks).map(week => (
+            <div key={week.week_id} className={this.getWeekClass(week.status)}>
+
+              { week.days_in_week.sort(sortWeekDays).map(day => (
+
                 <div key={day.id} className="Calendar-week__day">
                   { day.day_number }
+                  { (day.hours > 0) ? <small>{day.hours}h</small> : '' }
                 </div>
+
               ))}
+
             </div>
+
           ))}
 
         </div>
@@ -108,6 +167,8 @@ const mapStateToProps = state => ({
   users: state.calendar.users,
   weeks: state.calendar.weeks,
   selectedMonth: state.calendar.selectedMonth,
+  selectedYear: state.calendar.selectedYear,
+  selectedUser: state.calendar.selectedUser,
 })
 
 const mapDispatchToProps = ({

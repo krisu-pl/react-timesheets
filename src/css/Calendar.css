@@ -1,7 +1,8 @@
 .Calendar {
   width: 100%;
-  height: calc(60px + 5 * 50px);
+  height: calc(60px + 40px + 5 * 50px);
   background: #2c3e50;
+  user-select: none;
 }
 
 .Calendar-header {
@@ -37,8 +38,29 @@
   display: flex;
 }
 
+.Calendar-week--day-names {
+  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: bold;
+  height: 40px;
+  align-items: center;
+  color: #2980b9;
+}
+
 .Calendar-week--selected {
   background: #222;
+}
+
+.Calendar-week--green {
+  color: #2ecc71;
+}
+
+.Calendar-week--yellow {
+  color: #f1c40f;
+}
+
+.Calendar-week--red {
+  color: #c0392b;
 }
 
 .Calendar-week__day {
@@ -47,16 +69,4 @@
   padding: 10px;
   display: flex;
   flex-direction: column;
-}
-
-.Calendar-week__day--green {
-  color: #2ecc71;
-}
-
-.Calendar-week__day--yellow {
-  color: #f1c40f;
-}
-
-.Calendar-week__day--red {
-  color: #c0392b;
 }
