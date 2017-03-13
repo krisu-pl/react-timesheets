@@ -1,37 +1,66 @@
 import * as actionTypes from './types'
-
-function fetchUsers() {
-  return fetch('https://timesheet-staging-aurity.herokuapp.com/api/users')
-}
+import Api from '../../utils/Api'
 
 export function setDataFetched(isFetched) {
   return {
     type: actionTypes.SET_DATA_FETCHED,
-    isFetched
+    isFetched,
   }
 }
 
 export function updateUsersList(users) {
   return {
     type: actionTypes.UPDATE_USERS_LIST,
-    users
+    users,
   }
 }
 
 export function showError(message) {
   return {
     type: actionTypes.SHOW_ERROR,
-    message
+    message,
   }
 }
 
 export function getUsers() {
-  return function (dispatch) {
-    return fetchUsers().then((response) => {
-        return response.json()
-      }).then((users) => {
+  return (dispatch) => {
+    return Api.fetchUsers().then((response) => {
+      return response.json()
+    }).then(
+      (users) => {
         dispatch(updateUsersList(users))
-      }
+      },
+    )
+  }
+}
+
+export function selectUser(userId) {
+  return {
+    type: actionTypes.SELECT_USER,
+    userId,
+  }
+}
+
+export function selectMonth({ month, year }) {
+  return {
+    type: actionTypes.SELECT_MONTH,
+    month,
+    year,
+  }
+}
+
+export function getDataForMonth(options) {
+  return (dispatch) => {
+    return Api.getDataForMonth(options).then((response) => {
+      return response.json()
+    }).then(
+      ({ data }) => {
+        const action = {
+          type: actionTypes.GET_DATA_FOR_MONTH,
+          weeks: data.weeks,
+        }
+        dispatch(action)
+      },
     )
   }
 }

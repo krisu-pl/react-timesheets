@@ -1,9 +1,11 @@
 .Calendar {
   width: 100%;
+  height: calc(60px + 5 * 50px);
   background: #2c3e50;
 }
 
 .Calendar-header {
+  height: 60px;
   display: flex;
   background: #000;
 }

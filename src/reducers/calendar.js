@@ -3,6 +3,10 @@ import * as actionTypes from '../actions/calendar/types'
 const initialState = {
   isDataFetched: false,
   users: [],
+  selectedUser: null,
+  selectedMonth: null,
+  selectedYear: null,
+  weeks: [],
 }
 
 const calendar = (state = initialState, action) => {
@@ -17,6 +21,25 @@ const calendar = (state = initialState, action) => {
       return {
         ...state,
         users: action.users,
+      }
+    }
+    case actionTypes.SELECT_USER: {
+      return {
+        ...state,
+        selectedUser: action.userId,
+      }
+    }
+    case actionTypes.SELECT_MONTH: {
+      return {
+        ...state,
+        selectedMonth: action.month,
+        selectedYear: action.year,
+      }
+    }
+    case actionTypes.GET_DATA_FOR_MONTH: {
+      return {
+        ...state,
+        weeks: action.weeks,
       }
     }
     default:
