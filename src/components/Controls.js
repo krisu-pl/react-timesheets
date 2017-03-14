@@ -4,10 +4,10 @@ import React, {
 
 const Controls = props => (
   <div className="Controls">
-    <button className="Controls__button Controls__button--approve">
+    <button className="Controls__button Controls__button--approve" onClick={props.handleApprove}>
       Approve
     </button>
-    <button className="Controls__button Controls__button--reject">
+    <button className="Controls__button Controls__button--reject" onClick={props.handleReject}>
       Reject
     </button>
   </div>

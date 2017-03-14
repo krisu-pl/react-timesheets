@@ -49,17 +49,53 @@ export function selectMonth({ month, year }) {
   }
 }
 
-export function getDataForMonth(options) {
+export function selectWeek({ weekId }) {
+  return {
+    type: actionTypes.SELECT_WEEK,
+    weekId,
+  }
+}
+
+export function getDataForMonth({ month, year, userId }) {
   return (dispatch) => {
-    return Api.getDataForMonth(options).then((response) => {
+    return Api.getDataForMonth({ month, year, userId }).then((response) => {
       return response.json()
     }).then(
       ({ data }) => {
-        const action = {
+        dispatch({
           type: actionTypes.GET_DATA_FOR_MONTH,
           weeks: data.weeks,
-        }
-        dispatch(action)
+        })
+        dispatch(selectWeek({ weekId: null }))
+      },
+    )
+  }
+}
+
+export function updateWeeks({ weeks }) {
+  return {
+    type: actionTypes.UPDATE_WEEKS,
+    weeks,
+  }
+}
+
+export function setPopupMessage({ msg }) {
+  return {
+    type: actionTypes.SET_POPUP_MESSAGE,
+    popupMessage: msg,
+  }
+}
+
+export function postUpdatedWeek({ week, userId }) {
+  return (dispatch) => {
+    return Api.updateWeek({ week, userId }).then((response) => {
+      return response.json()
+    }).then(
+      () => {
+        dispatch(setPopupMessage({ msg: 'Week has been updated!' }))
+        setTimeout(() => {
+          dispatch(setPopupMessage({ msg: null }))
+        }, 2500)
       },
     )
   }

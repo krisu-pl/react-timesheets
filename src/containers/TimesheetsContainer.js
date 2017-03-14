@@ -1,9 +1,10 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 
-import { setDataFetched, getUsers, selectUser, selectMonth, getDataForMonth } from '../actions/calendar'
+import { setDataFetched, getUsers, selectUser, selectMonth, getDataForMonth, selectWeek, updateWeeks, postUpdatedWeek } from '../actions/calendar'
 
 import '../css/Loading.css'
+import '../css/Popup-message.css'
 import '../css/User-select.css'
 import '../css/Calendar.css'
 import '../css/Controls.css'
@@ -12,7 +13,7 @@ import UserSelect from '../components/UserSelect'
 import Controls from '../components/Controls'
 
 import { getMonthName } from '../utils/datetime'
-import { sortWeeks, sortWeekDays } from '../utils/calendar'
+import { WeekStatus, sortWeeks, sortWeekDays, findWeekById, setWeekStatus, updateWeeksList } from '../utils/calendar'
 
 class TimesheetsContainer extends Component {
   constructor() {
@@ -33,12 +34,38 @@ class TimesheetsContainer extends Component {
     )
   }
 
+  getWeekClass({ status, weekId }) {
+    const baseClass = `Calendar-week ${this.props.selectedWeek === weekId ? 'Calendar-week--selected' : ''}`
+    switch (status) {
+      case 'approved':
+        return `${baseClass} Calendar-week--green`
+      case 'rejected':
+        return `${baseClass} Calendar-week--red`
+      case 'waiting':
+        return `${baseClass} Calendar-week--yellow`
+      default:
+        return `${baseClass}`
+    }
+  }
+
+  changeWeekStatus(status) {
+    const selectedWeekId = this.props.selectedWeek
+    if (selectedWeekId) {
+      const currentWeeks = this.props.weeks
+      const selectedWeek = findWeekById(currentWeeks, selectedWeekId)
+      const updatedWeek = setWeekStatus(selectedWeek, status)
+      const weeks = updateWeeksList(currentWeeks, updatedWeek)
+      this.props.updateWeeks({ weeks })
+      this.props.postUpdatedWeek({ week: updatedWeek, userId: this.props.selectedUser })
+    }
+  }
+
   handleApprove() {
-    return true
+    this.changeWeekStatus(WeekStatus.APPROVED)
   }
 
   handleReject() {
-    return true
+    this.changeWeekStatus(WeekStatus.REJECTED)
   }
 
   goToPreviousMonth() {
@@ -72,26 +99,15 @@ class TimesheetsContainer extends Component {
     return true
   }
 
-  getWeekClass(status) {
-    const baseClass = 'Calendar-week'
-    switch (status) {
-      case 'approved':
-        return `${baseClass} Calendar-week--green`
-      case 'rejected':
-        return `${baseClass} Calendar-week--red`
-      case 'waiting':
-        return `${baseClass} Calendar-week--yellow`
-      default:
-        return `${baseClass}`
-    }
-  }
-
   render() {
     const loadingSpinner = this.props.isDataFetched ? '' : <div className="Loading">Fetching data...</div>
+    const popupMessage = this.props.popupMessage ? <div className="Popup-message">{this.props.popupMessage}</div> : ''
 
     return (
       <div>
         { loadingSpinner }
+        { popupMessage }
+
         <UserSelect
           handleUserSelection={this.handleUserSelection}
           users={this.props.users}
@@ -100,35 +116,39 @@ class TimesheetsContainer extends Component {
 
         <div className="Calendar">
           <div className="Calendar-header">
-            <div
+            <button
               className="Calendar-header__arrow Calendar-header__arrow--left"
               onClick={this.goToPreviousMonth}
             >
               &laquo;
-            </div>
+            </button>
             <div className="Calendar-header__month">
               { getMonthName(this.props.selectedMonth) }
             </div>
-            <div
+            <button
               className="Calendar-header__arrow Calendar-header__arrow--left"
               onClick={this.goToNextMonth}
             >
               &raquo;
-            </div>
+            </button>
           </div>
 
-          <div className="Calendar-week Calendar-week--day-names">
-            <div className="Calendar-week__day">Mon</div>
-            <div className="Calendar-week__day">Tue</div>
-            <div className="Calendar-week__day">Wed</div>
-            <div className="Calendar-week__day">Thu</div>
-            <div className="Calendar-week__day">Fri</div>
-            <div className="Calendar-week__day">Sat</div>
-            <div className="Calendar-week__day">Sun</div>
+          <div className="Calendar-day-names">
+            <div className="Calendar-day-names__day">Mon</div>
+            <div className="Calendar-day-names__day">Tue</div>
+            <div className="Calendar-day-names__day">Wed</div>
+            <div className="Calendar-day-names__day">Thu</div>
+            <div className="Calendar-day-names__day">Fri</div>
+            <div className="Calendar-day-names__day">Sat</div>
+            <div className="Calendar-day-names__day">Sun</div>
           </div>
 
           {this.props.weeks.sort(sortWeeks).map(week => (
-            <div key={week.week_id} className={this.getWeekClass(week.status)}>
+            <div
+              key={week.week_id}
+              className={this.getWeekClass({ status: week.status, weekId: week.week_id })}
+              onClick={() => this.props.selectWeek({ weekId: week.week_id })}
+            >
 
               { week.days_in_week.sort(sortWeekDays).map(day => (
 
@@ -169,6 +189,8 @@ const mapStateToProps = state => ({
   selectedMonth: state.calendar.selectedMonth,
   selectedYear: state.calendar.selectedYear,
   selectedUser: state.calendar.selectedUser,
+  selectedWeek: state.calendar.selectedWeek,
+  popupMessage: state.calendar.popupMessage,
 })
 
 const mapDispatchToProps = ({
@@ -177,6 +199,9 @@ const mapDispatchToProps = ({
   selectUser,
   selectMonth,
   getDataForMonth,
+  selectWeek,
+  updateWeeks,
+  postUpdatedWeek,
 })
 
 export default connect(

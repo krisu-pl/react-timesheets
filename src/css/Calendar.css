@@ -18,6 +18,11 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  background: inherit;
+  border: 0;
+  color: #fff;
+  outline: none;
+  font-family: 'Arial', sans-serif;
 }
 .Calendar-header__arrow:hover {
   background: #222;
@@ -32,19 +37,32 @@
   justify-content: center;
 }
 
+.Calendar-day-names {
+  width: 100%;
+  height: 40px;
+  display: flex;
+  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: bold;
+  align-items: center;
+  color: #2980b9;
+}
+
+.Calendar-day-names__day {
+  width: calc(100% / 7);
+  text-align: center;
+  padding: 10px;
+}
+
 .Calendar-week {
   width: 100%;
   height: 50px;
   display: flex;
+  cursor: pointer;
 }
 
-.Calendar-week--day-names {
-  text-transform: uppercase;
-  font-size: 12px;
-  font-weight: bold;
-  height: 40px;
-  align-items: center;
-  color: #2980b9;
+.Calendar-week:not(.Calendar-week--selected):hover {
+  background: #354c63;
 }
 
 .Calendar-week--selected {

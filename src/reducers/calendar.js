@@ -6,7 +6,9 @@ const initialState = {
   selectedUser: null,
   selectedMonth: null,
   selectedYear: null,
+  selectedWeek: null,
   weeks: [],
+  popupMessage: null,
 }
 
 const calendar = (state = initialState, action) => {
@@ -40,6 +42,24 @@ const calendar = (state = initialState, action) => {
       return {
         ...state,
         weeks: action.weeks,
+      }
+    }
+    case actionTypes.SELECT_WEEK: {
+      return {
+        ...state,
+        selectedWeek: action.weekId,
+      }
+    }
+    case actionTypes.UPDATE_WEEKS: {
+      return {
+        ...state,
+        weeks: action.weeks,
+      }
+    }
+    case actionTypes.SET_POPUP_MESSAGE: {
+      return {
+        ...state,
+        popupMessage: action.popupMessage,
       }
     }
     default:
