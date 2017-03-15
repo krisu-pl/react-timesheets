@@ -1,17 +1,17 @@
 import * as actionTypes from '../actions/users/types'
 
 const initialState = {
-  isDataFetched: false,
+  isUsersDataFetched: false,
   users: [],
   selectedUser: null,
 }
 
 const users = (state = initialState, action) => {
   switch (action.type) {
-    case actionTypes.SET_DATA_FETCHED: {
+    case actionTypes.SET_USER_DATA_FETCHED: {
       return {
         ...state,
-        isDataFetched: action.isFetched,
+        isUsersDataFetched: action.isFetched,
       }
     }
     case actionTypes.UPDATE_USERS_LIST: {

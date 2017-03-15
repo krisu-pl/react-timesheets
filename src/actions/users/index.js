@@ -3,7 +3,7 @@ import Api from '../../utils/Api'
 
 export function setDataFetched(isFetched) {
   return {
-    type: actionTypes.SET_DATA_FETCHED,
+    type: actionTypes.SET_USER_DATA_FETCHED,
     isFetched,
   }
 }

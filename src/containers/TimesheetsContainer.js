@@ -81,7 +81,7 @@ class TimesheetsContainer extends Component {
   }
 
   render() {
-    const loadingSpinner = this.props.isDataFetched ? '' : <div className="Loading">Fetching data...</div>
+    const loadingSpinner = this.props.isUsersDataFetched ? '' : <div className="Loading">Fetching data...</div>
     const popupMessage = this.props.popupMessage ? <div className="Popup-message">{this.props.popupMessage}</div> : ''
 
     return (
@@ -113,7 +113,7 @@ TimesheetsContainer.propTypes = {
   setDataFetched: PropTypes.func.isRequired,
   updateWeeks: PropTypes.func.isRequired,
   postUpdatedWeek: PropTypes.func.isRequired,
-  isDataFetched: PropTypes.bool.isRequired,
+  isUsersDataFetched: PropTypes.bool.isRequired,
   popupMessage: PropTypes.string,
   selectedWeek: PropTypes.number,
   selectedUser: PropTypes.number,
@@ -128,7 +128,7 @@ TimesheetsContainer.defaultProps = {
 }
 
 const mapStateToProps = state => ({
-  isDataFetched: state.users.isDataFetched,
+  isUsersDataFetched: state.users.isUsersDataFetched,
   users: state.users.users,
   selectedUser: state.users.selectedUser,
   weeks: state.calendar.weeks,
