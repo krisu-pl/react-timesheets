@@ -2,7 +2,6 @@ import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 
 import {
-  selectUser,
   selectMonth,
   getDataForMonth,
   selectWeek,
@@ -136,15 +135,14 @@ CalendarContainer.defaultProps = {
 }
 
 const mapStateToProps = state => ({
+  selectedUser: state.users.selectedUser,
   weeks: state.calendar.weeks,
   selectedMonth: state.calendar.selectedMonth,
   selectedYear: state.calendar.selectedYear,
-  selectedUser: state.calendar.selectedUser,
   selectedWeek: state.calendar.selectedWeek,
 })
 
 const mapDispatchToProps = ({
-  selectUser,
   selectMonth,
   getDataForMonth,
   selectWeek,

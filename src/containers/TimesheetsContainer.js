@@ -5,6 +5,9 @@ import {
   setDataFetched,
   getUsers,
   selectUser,
+} from '../actions/users'
+
+import {
   selectMonth,
   getDataForMonth,
   selectWeek,
@@ -17,7 +20,7 @@ import '../css/Popup-message.css'
 
 import UserSelect from '../components/UserSelect'
 import Controls from '../components/Controls'
-import Calendar from './CalendarContainer'
+import CalendarContainer from './CalendarContainer'
 
 import {
   WeekStatus,
@@ -91,7 +94,7 @@ class TimesheetsContainer extends Component {
           users={this.props.users}
         />
 
-        <Calendar />
+        <CalendarContainer />
 
         <Controls
           handleApprove={this.handleApprove}
@@ -125,12 +128,12 @@ TimesheetsContainer.defaultProps = {
 }
 
 const mapStateToProps = state => ({
-  isDataFetched: state.calendar.isDataFetched,
-  users: state.calendar.users,
+  isDataFetched: state.users.isDataFetched,
+  users: state.users.users,
+  selectedUser: state.users.selectedUser,
   weeks: state.calendar.weeks,
   selectedMonth: state.calendar.selectedMonth,
   selectedYear: state.calendar.selectedYear,
-  selectedUser: state.calendar.selectedUser,
   selectedWeek: state.calendar.selectedWeek,
   popupMessage: state.calendar.popupMessage,
 })
