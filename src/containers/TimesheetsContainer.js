@@ -1,7 +1,16 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 
-import { setDataFetched, getUsers, selectUser, selectMonth, getDataForMonth, selectWeek, updateWeeks, postUpdatedWeek } from '../actions/calendar'
+import {
+  setDataFetched,
+  getUsers,
+  selectUser,
+  selectMonth,
+  getDataForMonth,
+  selectWeek,
+  updateWeeks,
+  postUpdatedWeek
+} from '../actions/calendar'
 
 import '../css/Loading.css'
 import '../css/Popup-message.css'
@@ -90,18 +99,22 @@ class TimesheetsContainer extends Component {
 
   handleUserSelection(event) {
     const userId = event.target.value
-    const month = new Date().getMonth()
-    const year = new Date().getFullYear()
-    this.props.selectUser(userId)
-    this.props.selectMonth({ month, year })
-    this.props.getDataForMonth({ month, year, userId })
-
-    return true
+    if (userId > -1) {
+      const month = new Date().getMonth()
+      const year = new Date().getFullYear()
+      this.props.selectUser({ userId })
+      this.props.selectMonth({ month, year })
+      this.props.getDataForMonth({ month, year, userId })
+    } else {
+      this.props.selectUser({ userId: null })
+    }
   }
 
   render() {
     const loadingSpinner = this.props.isDataFetched ? '' : <div className="Loading">Fetching data...</div>
     const popupMessage = this.props.popupMessage ? <div className="Popup-message">{this.props.popupMessage}</div> : ''
+    const calendarOverlay = (this.props.selectedUser && this.props.weeks.length > 0) ? '' :
+      <div className="Calendar__overlay">Select user to start</div>
 
     return (
       <div>
@@ -115,6 +128,7 @@ class TimesheetsContainer extends Component {
 
 
         <div className="Calendar">
+          { calendarOverlay }
           <div className="Calendar-header">
             <button
               className="Calendar-header__arrow Calendar-header__arrow--left"

@@ -34,7 +34,7 @@ export function getUsers() {
   }
 }
 
-export function selectUser(userId) {
+export function selectUser({ userId }) {
   return {
     type: actionTypes.SELECT_USER,
     userId,
@@ -66,7 +66,6 @@ export function getDataForMonth({ month, year, userId }) {
           type: actionTypes.GET_DATA_FOR_MONTH,
           weeks: data.weeks,
         })
-        dispatch(selectWeek({ weekId: null }))
       },
     )
   }

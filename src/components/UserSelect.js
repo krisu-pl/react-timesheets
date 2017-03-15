@@ -8,7 +8,7 @@ const UserSelect = props => (
       Select user:
     </p>
     <select className="User-select__list" onChange={props.handleUserSelection}>
-      <option>- Select user -</option>
+      <option value="-1">- Choose from the list -</option>
       {
         props.users.map(user => (<option key={user.id} value={user.id}>{ user.username }</option>))
       }

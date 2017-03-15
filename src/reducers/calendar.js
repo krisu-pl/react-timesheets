@@ -42,6 +42,7 @@ const calendar = (state = initialState, action) => {
       return {
         ...state,
         weeks: action.weeks,
+        selectedWeek: null,
       }
     }
     case actionTypes.SELECT_WEEK: {
@@ -54,6 +55,7 @@ const calendar = (state = initialState, action) => {
       return {
         ...state,
         weeks: action.weeks,
+        selectedWeek: null,
       }
     }
     case actionTypes.SET_POPUP_MESSAGE: {
