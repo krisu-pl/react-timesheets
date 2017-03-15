@@ -2,6 +2,8 @@ import React, {
   PropTypes,
 } from 'react'
 
+import '../css/Controls.css'
+
 const Controls = props => (
   <div className="Controls">
     <button className="Controls__button Controls__button--approve" onClick={props.handleApprove}>

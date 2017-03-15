@@ -9,20 +9,22 @@ import {
   getDataForMonth,
   selectWeek,
   updateWeeks,
-  postUpdatedWeek
+  postUpdatedWeek,
 } from '../actions/calendar'
 
 import '../css/Loading.css'
 import '../css/Popup-message.css'
-import '../css/User-select.css'
-import '../css/Calendar.css'
-import '../css/Controls.css'
 
 import UserSelect from '../components/UserSelect'
 import Controls from '../components/Controls'
+import Calendar from './CalendarContainer'
 
-import { getMonthName } from '../utils/datetime'
-import { WeekStatus, sortWeeks, sortWeekDays, findWeekById, setWeekStatus, updateWeeksList } from '../utils/calendar'
+import {
+  WeekStatus,
+  findWeekById,
+  setWeekStatus,
+  updateWeeksList,
+} from '../utils/calendar'
 
 class TimesheetsContainer extends Component {
   constructor() {
@@ -31,8 +33,7 @@ class TimesheetsContainer extends Component {
     this.handleApprove = this.handleApprove.bind(this)
     this.handleReject = this.handleReject.bind(this)
     this.handleUserSelection = this.handleUserSelection.bind(this)
-    this.goToPreviousMonth = this.goToPreviousMonth.bind(this)
-    this.goToNextMonth = this.goToNextMonth.bind(this)
+    this.changeWeekStatus = this.changeWeekStatus.bind(this)
   }
 
   componentDidMount() {
@@ -41,20 +42,6 @@ class TimesheetsContainer extends Component {
         this.props.setDataFetched(true)
       },
     )
-  }
-
-  getWeekClass({ status, weekId }) {
-    const baseClass = `Calendar-week ${this.props.selectedWeek === weekId ? 'Calendar-week--selected' : ''}`
-    switch (status) {
-      case 'approved':
-        return `${baseClass} Calendar-week--green`
-      case 'rejected':
-        return `${baseClass} Calendar-week--red`
-      case 'waiting':
-        return `${baseClass} Calendar-week--yellow`
-      default:
-        return `${baseClass}`
-    }
   }
 
   changeWeekStatus(status) {
@@ -77,28 +64,8 @@ class TimesheetsContainer extends Component {
     this.changeWeekStatus(WeekStatus.REJECTED)
   }
 
-  goToPreviousMonth() {
-    const oldMonth = this.props.selectedMonth
-    const year = this.props.selectedYear
-    const userId = this.props.selectedUser
-
-    const month = (oldMonth - 1 < 0) ? 11 : oldMonth - 1
-    this.props.selectMonth({ month, year })
-    this.props.getDataForMonth({ month, year, userId })
-  }
-
-  goToNextMonth() {
-    const oldMonth = this.props.selectedMonth
-    const year = this.props.selectedYear
-    const userId = this.props.selectedUser
-
-    const month = (oldMonth + 1 > 11) ? 0 : oldMonth + 1
-    this.props.selectMonth({ month, year })
-    this.props.getDataForMonth({ month, year, userId })
-  }
-
   handleUserSelection(event) {
-    const userId = event.target.value
+    const userId = parseInt(event.target.value, 10)
     if (userId > -1) {
       const month = new Date().getMonth()
       const year = new Date().getFullYear()
@@ -113,8 +80,6 @@ class TimesheetsContainer extends Component {
   render() {
     const loadingSpinner = this.props.isDataFetched ? '' : <div className="Loading">Fetching data...</div>
     const popupMessage = this.props.popupMessage ? <div className="Popup-message">{this.props.popupMessage}</div> : ''
-    const calendarOverlay = (this.props.selectedUser && this.props.weeks.length > 0) ? '' :
-      <div className="Calendar__overlay">Select user to start</div>
 
     return (
       <div>
@@ -126,58 +91,7 @@ class TimesheetsContainer extends Component {
           users={this.props.users}
         />
 
-
-        <div className="Calendar">
-          { calendarOverlay }
-          <div className="Calendar-header">
-            <button
-              className="Calendar-header__arrow Calendar-header__arrow--left"
-              onClick={this.goToPreviousMonth}
-            >
-              &laquo;
-            </button>
-            <div className="Calendar-header__month">
-              { getMonthName(this.props.selectedMonth) }
-            </div>
-            <button
-              className="Calendar-header__arrow Calendar-header__arrow--left"
-              onClick={this.goToNextMonth}
-            >
-              &raquo;
-            </button>
-          </div>
-
-          <div className="Calendar-day-names">
-            <div className="Calendar-day-names__day">Mon</div>
-            <div className="Calendar-day-names__day">Tue</div>
-            <div className="Calendar-day-names__day">Wed</div>
-            <div className="Calendar-day-names__day">Thu</div>
-            <div className="Calendar-day-names__day">Fri</div>
-            <div className="Calendar-day-names__day">Sat</div>
-            <div className="Calendar-day-names__day">Sun</div>
-          </div>
-
-          {this.props.weeks.sort(sortWeeks).map(week => (
-            <div
-              key={week.week_id}
-              className={this.getWeekClass({ status: week.status, weekId: week.week_id })}
-              onClick={() => this.props.selectWeek({ weekId: week.week_id })}
-            >
-
-              { week.days_in_week.sort(sortWeekDays).map(day => (
-
-                <div key={day.id} className="Calendar-week__day">
-                  { day.day_number }
-                  { (day.hours > 0) ? <small>{day.hours}h</small> : '' }
-                </div>
-
-              ))}
-
-            </div>
-
-          ))}
-
-        </div>
+        <Calendar />
 
         <Controls
           handleApprove={this.handleApprove}
@@ -188,12 +102,26 @@ class TimesheetsContainer extends Component {
   }
 }
 
-TimesheetsContainer.PropTypes = {
+TimesheetsContainer.propTypes = {
   getUsers: PropTypes.func.isRequired,
   selectUser: PropTypes.func.isRequired,
+  selectMonth: PropTypes.func.isRequired,
   getDataForMonth: PropTypes.func.isRequired,
-  setDataFetched: PropTypes.func,
-  isDataFetched: PropTypes.bool,
+  setDataFetched: PropTypes.func.isRequired,
+  updateWeeks: PropTypes.func.isRequired,
+  postUpdatedWeek: PropTypes.func.isRequired,
+  isDataFetched: PropTypes.bool.isRequired,
+  popupMessage: PropTypes.string,
+  selectedWeek: PropTypes.number,
+  selectedUser: PropTypes.number,
+  weeks: PropTypes.arrayOf(PropTypes.object).isRequired,
+  users: PropTypes.arrayOf(PropTypes.object).isRequired,
+}
+
+TimesheetsContainer.defaultProps = {
+  popupMessage: null,
+  selectedWeek: null,
+  selectedUser: null,
 }
 
 const mapStateToProps = state => ({

@@ -2,6 +2,8 @@ import React, {
   PropTypes,
 } from 'react'
 
+import '../css/User-select.css'
+
 const UserSelect = props => (
   <div className="User-select">
     <p className="User-select__label">
