@@ -9,11 +9,13 @@ import {
 
 import {
   sortWeeks,
-  sortWeekDays,
 } from '../utils/calendar'
-import { getMonthName } from '../utils/datetime'
 
 import '../css/Calendar.css'
+
+import CalendarHeader from '../components/calendar/CalendarHeader'
+import CalendarDayNames from '../components/calendar/CalendarDayNames'
+import CalendarWeek from '../components/calendar/CalendarWeek'
 
 class CalendarContainer extends Component {
   constructor() {
@@ -21,20 +23,6 @@ class CalendarContainer extends Component {
 
     this.goToPreviousMonth = this.goToPreviousMonth.bind(this)
     this.goToNextMonth = this.goToNextMonth.bind(this)
-  }
-
-  getWeekClass({ status, weekId }) {
-    const baseClass = `Calendar-week ${this.props.selectedWeek === weekId ? 'Calendar-week--selected' : ''}`
-    switch (status) {
-      case 'approved':
-        return `${baseClass} Calendar-week--green`
-      case 'rejected':
-        return `${baseClass} Calendar-week--red`
-      case 'waiting':
-        return `${baseClass} Calendar-week--yellow`
-      default:
-        return `${baseClass}`
-    }
   }
 
   goToPreviousMonth() {
@@ -63,52 +51,22 @@ class CalendarContainer extends Component {
     return (
       <div className="Calendar">
         { calendarOverlay }
-        <div className="Calendar-header">
-          <button
-            className="Calendar-header__arrow Calendar-header__arrow--left"
-            onClick={this.goToPreviousMonth}
-          >
-            &laquo;
-          </button>
-          <div className="Calendar-header__month">
-            { getMonthName(this.props.selectedMonth) }
-          </div>
-          <button
-            className="Calendar-header__arrow Calendar-header__arrow--left"
-            onClick={this.goToNextMonth}
-          >
-            &raquo;
-          </button>
-        </div>
 
-        <div className="Calendar-day-names">
-          <div className="Calendar-day-names__day">Mon</div>
-          <div className="Calendar-day-names__day">Tue</div>
-          <div className="Calendar-day-names__day">Wed</div>
-          <div className="Calendar-day-names__day">Thu</div>
-          <div className="Calendar-day-names__day">Fri</div>
-          <div className="Calendar-day-names__day">Sat</div>
-          <div className="Calendar-day-names__day">Sun</div>
-        </div>
+        <CalendarHeader
+          selectedMonth={this.props.selectedMonth}
+          goToPreviousMonth={this.goToPreviousMonth}
+          goToNextMonth={this.goToNextMonth}
+        />
+
+        <CalendarDayNames />
 
         {this.props.weeks.sort(sortWeeks).map(week => (
-          <div
+          <CalendarWeek
             key={week.week_id}
-            className={this.getWeekClass({ status: week.status, weekId: week.week_id })}
-            onClick={() => this.props.selectWeek({ weekId: week.week_id })}
-          >
-
-            { week.days_in_week.sort(sortWeekDays).map(day => (
-
-              <div key={day.id} className="Calendar-week__day">
-                { day.day_number }
-                { (day.hours > 0) ? <small>{day.hours}h</small> : '' }
-              </div>
-
-            ))}
-
-          </div>
-
+            week={week}
+            selectedWeek={this.props.selectedWeek}
+            selectWeek={this.props.selectWeek}
+          />
         ))}
 
       </div>
