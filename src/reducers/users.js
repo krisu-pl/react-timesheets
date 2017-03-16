@@ -20,7 +20,7 @@ const users = (state = initialState, action) => {
         users: action.users,
       }
     }
-    case actionTypes.SELECT_USER: {
+    case actionTypes.SET_SELECTED_USER: {
       return {
         ...state,
         selectedUser: action.userId,

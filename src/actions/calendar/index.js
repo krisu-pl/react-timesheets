@@ -3,7 +3,7 @@ import Api from '../../utils/Api'
 
 export function selectMonth({ month, year }) {
   return {
-    type: actionTypes.SELECT_MONTH,
+    type: actionTypes.SET_SELECTED_MONTH,
     month,
     year,
   }
@@ -11,7 +11,7 @@ export function selectMonth({ month, year }) {
 
 export function selectWeek({ weekId }) {
   return {
-    type: actionTypes.SELECT_WEEK,
+    type: actionTypes.SET_SELECTED_WEEK,
     weekId,
   }
 }

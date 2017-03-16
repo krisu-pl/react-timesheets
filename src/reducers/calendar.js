@@ -10,7 +10,7 @@ const initialState = {
 
 const calendar = (state = initialState, action) => {
   switch (action.type) {
-    case actionTypes.SELECT_MONTH: {
+    case actionTypes.SET_SELECTED_MONTH: {
       return {
         ...state,
         selectedMonth: action.month,
@@ -24,7 +24,7 @@ const calendar = (state = initialState, action) => {
         selectedWeek: null,
       }
     }
-    case actionTypes.SELECT_WEEK: {
+    case actionTypes.SET_SELECTED_WEEK: {
       return {
         ...state,
         selectedWeek: action.weekId,

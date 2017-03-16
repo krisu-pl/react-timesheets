@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 
 import {
-  setDataFetched,
+  setUserDataFetched,
   getUsers,
   selectUser,
 } from '../actions/users'
@@ -23,7 +23,7 @@ import Controls from '../components/Controls'
 import CalendarContainer from './CalendarContainer'
 
 import {
-  WeekStatus,
+  WEEK_STATUS,
   findWeekById,
   setWeekStatus,
   updateWeeksList,
@@ -42,7 +42,7 @@ class TimesheetsContainer extends Component {
   componentDidMount() {
     this.props.getUsers().then(
       () => {
-        this.props.setDataFetched(true)
+        this.props.setUserDataFetched(true)
       },
     )
   }
@@ -60,11 +60,11 @@ class TimesheetsContainer extends Component {
   }
 
   handleApprove() {
-    this.changeWeekStatus(WeekStatus.APPROVED)
+    this.changeWeekStatus(WEEK_STATUS.APPROVED)
   }
 
   handleReject() {
-    this.changeWeekStatus(WeekStatus.REJECTED)
+    this.changeWeekStatus(WEEK_STATUS.REJECTED)
   }
 
   handleUserSelection(event) {
@@ -110,7 +110,7 @@ TimesheetsContainer.propTypes = {
   selectUser: PropTypes.func.isRequired,
   selectMonth: PropTypes.func.isRequired,
   getDataForMonth: PropTypes.func.isRequired,
-  setDataFetched: PropTypes.func.isRequired,
+  setUserDataFetched: PropTypes.func.isRequired,
   updateWeeks: PropTypes.func.isRequired,
   postUpdatedWeek: PropTypes.func.isRequired,
   isUsersDataFetched: PropTypes.bool.isRequired,
@@ -139,7 +139,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = ({
-  setDataFetched,
+  setUserDataFetched,
   getUsers,
   selectUser,
   selectMonth,

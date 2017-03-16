@@ -1,7 +1,7 @@
 import * as actionTypes from './types'
 import Api from '../../utils/Api'
 
-export function setDataFetched(isFetched) {
+export function setUserDataFetched(isFetched) {
   return {
     type: actionTypes.SET_USER_DATA_FETCHED,
     isFetched,
@@ -29,7 +29,7 @@ export function getUsers() {
 
 export function selectUser({ userId }) {
   return {
-    type: actionTypes.SELECT_USER,
+    type: actionTypes.SET_SELECTED_USER,
     userId,
   }
 }

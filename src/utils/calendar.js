@@ -1,4 +1,4 @@
-export const WeekStatus = {
+export const WEEK_STATUS = {
   APPROVED: 'approved',
   REJECTED: 'rejected',
 }
